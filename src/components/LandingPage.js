@@ -39,6 +39,9 @@ class LandingPage extends Component {
               Source Code
             </a>
           </div>
+          <h3 className="text-xl lg:text-3xl">
+            Built with ❤️ by Akash Ramjyothi.
+          </h3>
         </div>
       </div>
     );
