@@ -7,6 +7,9 @@
 ## 📜 Description:
 The project **"Resume-inator"** is an online open-source resume builder. It is very easy to and the resume can be built within minutes. The required input fields are entered by the user, and then based on the details, the Resume is generated. Currently, it supports only 2 templates. Highly inspired from Overleaf resume and novoresume.
 
+## 🌳 Social-Welfare Usecase:
+This project helps to organize thoughts and ensures that everything is filled in its appropriate place. It helps to remember important details that should be on the resume, making sure that nothing important is left out. It is also a time-saving advantage if there is a need for applying for more than one job.
+
 ## 📽 Sample Demo:
 https://user-images.githubusercontent.com/54114888/126884744-f64cfe6c-801b-4bb9-863d-f038d2e64fd8.mp4
 
