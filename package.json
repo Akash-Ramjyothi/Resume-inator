@@ -2,43 +2,127 @@
   "name": "tech-resume",
   "version": "0.1.0",
   "private": true,
+  "description": "Modern tech resume application with Tailwind CSS and React",
+  "author": "Your Name",
+  "license": "MIT",
+  "homepage": "https://your-resume-domain.com",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yourusername/tech-resume.git"
+  },
+  "keywords": [
+    "resume",
+    "portfolio",
+    "react",
+    "tailwindcss",
+    "craco"
+  ],
   "dependencies": {
-    "@craco/craco": "^6.1.0",
-    "@tailwindcss/postcss7-compat": "^2.0.2",
-    "@testing-library/jest-dom": "^5.11.9",
-    "@testing-library/react": "^11.2.5",
-    "@testing-library/user-event": "^12.6.3",
-    "autoprefixer": "^9.8.6",
-    "postcss": "^7.0.35",
-    "react": "^17.0.1",
-    "react-dom": "^17.0.1",
-    "react-router-dom": "^5.2.0",
-    "react-scripts": "4.0.2",
-    "tailwindcss": "npm:@tailwindcss/postcss7-compat@^2.0.2",
-    "web-vitals": "^1.1.0"
+    "@craco/craco": "^6.4.5",
+    "@tailwindcss/postcss7-compat": "^2.2.17",
+    "@testing-library/jest-dom": "^5.16.5",
+    "@testing-library/react": "^11.2.7",
+    "@testing-library/user-event": "^12.8.3",
+    "autoprefixer": "^9.8.8",
+    "postcss": "^7.0.39",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
+    "react-router-dom": "^5.3.4",
+    "react-scripts": "4.0.3",
+    "tailwindcss": "npm:@tailwindcss/postcss7-compat@^2.2.17",
+    "web-vitals": "^1.1.2"
+  },
+  "devDependencies": {
+    "@tailwindcss/typography": "^0.5.9",
+    "@tailwindcss/forms": "^0.5.3",
+    "@tailwindcss/aspect-ratio": "^0.4.2",
+    "@tailwindcss/line-clamp": "^0.4.4",
+    "@types/react": "^17.0.62",
+    "@types/react-dom": "^17.0.20",
+    "@types/react-router-dom": "^5.3.3",
+    "eslint-config-prettier": "^8.8.0",
+    "eslint-plugin-prettier": "^4.2.1",
+    "prettier": "^2.8.8",
+    "husky": "^8.0.3",
+    "lint-staged": "^13.2.3",
+    "cross-env": "^7.0.3",
+    "serve": "^14.2.0",
+    "npm-run-all": "^4.1.5"
   },
   "scripts": {
     "start": "craco start",
+    "start:dev": "cross-env BROWSER=none craco start",
     "build": "craco build",
+    "build:analyze": "cross-env ANALYZE=true craco build",
     "test": "craco test",
-    "eject": "react-scripts eject"
+    "test:coverage": "craco test --coverage --watchAll=false",
+    "test:watch": "craco test --watch",
+    "eject": "react-scripts eject",
+    "preview": "serve -s build",
+    "clean": "rm -rf build node_modules package-lock.json && npm install",
+    "format": "prettier --write \"src/**/*.{js,jsx,ts,tsx,css,md}\"",
+    "format:check": "prettier --check \"src/**/*.{js,jsx,ts,tsx,css,md}\"",
+    "lint": "eslint src --ext js,jsx,ts,tsx",
+    "lint:fix": "eslint src --ext js,jsx,ts,tsx --fix",
+    "prepare": "husky install",
+    "precommit": "lint-staged",
+    "build:optimized": "npm-run-all clean format lint build",
+    "deploy": "npm run build && npm run preview"
   },
   "eslintConfig": {
     "extends": [
       "react-app",
-      "react-app/jest"
+      "react-app/jest",
+      "plugin:prettier/recommended"
+    ],
+    "rules": {
+      "no-console": "warn",
+      "no-debugger": "warn",
+      "prettier/prettier": "error"
+    }
+  },
+  "prettier": {
+    "semi": true,
+    "trailingComma": "es5",
+    "singleQuote": true,
+    "printWidth": 100,
+    "tabWidth": 2,
+    "useTabs": false,
+    "bracketSpacing": true,
+    "arrowParens": "always",
+    "endOfLine": "lf"
+  },
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "*.{css,md,json}": [
+      "prettier --write"
     ]
   },
   "browserslist": {
     "production": [
       ">0.2%",
       "not dead",
-      "not op_mini all"
+      "not op_mini all",
+      "ie >= 11"
     ],
     "development": [
       "last 1 chrome version",
       "last 1 firefox version",
-      "last 1 safari version"
+      "last 1 safari version",
+      "last 1 edge version"
     ]
-  }
+  },
+  "proxy": "http://localhost:5000",
+  "engines": {
+    "node": ">=14.0.0",
+    "npm": ">=6.14.0"
+  },
+  "os": [
+    "darwin",
+    "linux",
+    "win32"
+  ]
 }
