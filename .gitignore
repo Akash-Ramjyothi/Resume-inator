@@ -1,23 +1,408 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
-# dependencies
+# Dependencies
 /node_modules
 /.pnp
 .pnp.js
+.pnp.loader.mjs
+/yarn.lock
+/package-lock.json
+/pnpm-lock.yaml
 
-# testing
+# Testing
 /coverage
+/.nyc_output
+/coverage.json
+/.jest-cache
+/.vitest
+/__snapshots__
 
-# production
+# Production
 /build
+/dist
+/.next
+/out
+/.output
+/.nuxt
+/.svelte-kit
+/.vercel
+/.netlify
 
-# misc
+# Misc
 .DS_Store
 .env.local
 .env.development.local
 .env.test.local
 .env.production.local
-
+.env*.local
+*.log
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# IDE and Editor Files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.project
+.classpath
+.settings/
+*.sublime-*
+/.vscode/settings.json
+/.vscode/tasks.json
+/.vscode/launch.json
+/.vscode/extensions.json
+
+# OS Files
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+*.DS_Store
+.AppleDouble
+.LSOverride
+._*
+
+# Environment and Config Files
+.env
+.env.*
+!.env.example
+.envrc
+.direnv/
+.cache
+.parcel-cache
+.turbo
+.nx
+
+# Build Tools
+/craco.config.js.bak
+/webpack.config.js.bak
+/vite.config.js.bak
+/rollup.config.js.bak
+/nodemon.json.bak
+
+# Debug
+*.pid
+*.seed
+*.pid.lock
+logs/
+*.log
+debug.log
+
+# Runtime Data
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# Coverage Directory Used by Tools Like istanbul
+coverage/
+.nyc_output/
+
+# Grunt intermediate storage (https://gruntjs.com/creating-plugins#storing-task-files)
+.grunt
+
+# Bower dependency directory (https://bower.io/)
+bower_components
+
+# node-waf configuration
+.lock-wscript
+
+# Compiled binary addons (https://nodejs.org/api/addons.html)
+build/Release
+
+# Dependency directories
+jspm_packages/
+
+# TypeScript cache
+*.tsbuildinfo
+
+# Optional npm cache directory
+.npm
+
+# Optional eslint cache
+.eslintcache
+
+# Optional stylelint cache
+.stylelintcache
+
+# Microbundle cache
+.rpt2_cache/
+.rts2_cache_cjs/
+.rts2_cache_es/
+.rts2_cache_umd/
+
+# Optional REPL history
+.node_repl_history
+
+# Output of 'npm pack'
+*.tgz
+
+# Yarn Integrity file
+.yarn-integrity
+
+# dotenv environment variable files
+.env
+.env.test
+.env.staging
+.env.production
+
+# parcel-bundler cache (https://parceljs.org/)
+.cache
+.parcel-cache
+
+# Next.js build output
+.next
+out
+
+# Nuxt.js build / generate output
+.nuxt
+dist
+
+# Gatsby files
+.cache/
+public
+
+# Storybook build outputs
+storybook-static
+
+# rollup.js default build output
+dist/
+
+# gatsby files
+.cache
+public
+
+# SvelteKit build output
+.svelte-kit
+
+# Remix build output
+build/
+/.cache
+
+# Electron
+.electron-cache
+dist/
+
+# React Router
+/.react-router/
+
+# Serverless directories
+.serverless/
+
+# FuseBox cache
+.fusebox/
+
+# DynamoDB Local files
+.dynamodb/
+
+# TernJS port file
+.tern-port
+
+# Stores VSCode versions used for testing
+.vscode-test
+
+# Temporary folders
+tmp/
+temp/
+*.tmp
+*.temp
+
+# Backup files
+*.bak
+*.backup
+*.old
+*.orig
+
+# Certificate files
+*.pem
+*.crt
+*.key
+
+# Database files
+*.sqlite
+*.sqlite3
+*.db
+
+# Logs and databases
+*.log
+*.sql
+*.sqlite
+
+# Ignore package files in specific cases
+!package.json
+
+# Ignore popular version control files
+.git
+.gitignore
+.gitattributes
+.gitmodules
+.svn
+.hg
+
+# Docker volumes (ignore if you commit docker-compose.yml)
+/data
+/volumes
+
+# Sentry config file
+.sentryclirc
+
+# Local Netlify folder
+.netlify
+
+# IDE - Vim
+[._]*.s[a-v][a-z]
+[._]*.sw[a-p]
+[._]s[a-rt-v][a-z]
+[._]ss[a-gi-z]
+*.un~
+Session.vim
+.netrwhist
+
+# IDE - Visual Studio Code
+.history/
+*.vsix
+.vscode/*.code-workspace
+!.vscode/extensions.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/settings.json
+
+# IDE - JetBrains
+.idea/
+*.iml
+*.ipr
+*.iws
+out/
+.idea_modules/
+
+# IDE - Eclipse
+*.pydevproject
+.metadata
+bin/
+tmp/
+*.tmp
+*.bak
+*.swp
+*.swo
+*.log
+*.project
+*.classpath
+.settings/
+
+# IDE - NetBeans
+nbproject/private/
+build/
+nbbuild/
+dist/
+nbdist/
+.nb-gradle/
+
+# IDE - Emacs
+*~
+\#*\#
+/.emacs.desktop
+/.emacs.desktop.lock
+*.elc
+auto-save-list
+tramp
+.\#*
+
+# IDE - TextMate
+*.tmproj
+.tm_properties
+
+# IDE - Brackets
+*.brackets.json
+
+# IDE - IntelliJ
+*.iml
+*.ipr
+*.iws
+.idea/
+out/
+
+# Archives
+*.7z
+*.dmg
+*.gz
+*.iso
+*.jar
+*.rar
+*.tar
+*.zip
+*.pkg
+
+# Binary files
+*.exe
+*.dll
+*.so
+*.dylib
+*.bin
+
+# Media files (ignored only in root or specific cases, adjust as needed)
+# *.mp4
+# *.mp3
+# *.jpg
+# *.jpeg
+# *.png
+# *.gif
+# *.svg
+
+# Ignore all secrets files
+*secret*
+*.key
+*.pem
+*.crt
+*.csr
+private.key
+*.cert
+
+# PWA Workbox files
+sw.js
+workbox-*.js
+
+# Firebase
+.firebase/
+.firebaserc
+
+# Firebase Private Key
+*.json
+!firebase.json
+!package.json
+!tsconfig.json
+!jsconfig.json
+
+# Cypress
+cypress/videos/
+cypress/screenshots/
+cypress/downloads/
+cypress/fixtures/example.json
+
+# Playwright
+test-results/
+playwright-report/
+playwright/.cache/
+
+# ESLint
+.eslintcache
+
+# Prettier
+.prettiercache
+
+# Stylelint
+.stylelintcache
+
+# TypeDoc
+docs/
+
+# Yarn 2+ specific
+.yarn/cache
+.yarn/unplugged
+.yarn/build-state.yml
+.yarn/install-state.gz
+.pnp.*
