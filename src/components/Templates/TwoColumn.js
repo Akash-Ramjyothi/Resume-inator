@@ -1,235 +1,275 @@
-import React, { Component } from "react";
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+
+// Extracted icon components for better reusability
+const Icons = {
+  Phone: () => (
+    <svg className="w-5 inline-block" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+    </svg>
+  ),
+  Email: () => (
+    <svg className="w-5 inline-block" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+    </svg>
+  ),
+  Location: () => (
+    <svg className="w-5 inline-block" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+    </svg>
+  )
+};
+
+// Extracted section components for better readability
+const Section = ({ title, children, className = '' }) => (
+  <section className={`flex flex-col w-full mb-5 px-5 ${className}`}>
+    <div className="text-md text-black border-b border-black tracking-widest">
+      {title}
+    </div>
+    {children}
+  </section>
+);
+
+const ExperienceItem = ({ title, startDate, endDate, company, description }) => (
+  <div className="flex flex-col">
+    <div className="flex justify-between flex-wrap">
+      <div className="text-sm pt-3 text-black">
+        <li className="font-medium">{title}</li>
+      </div>
+      <div className="text-sm pt-3 text-black">
+        <span>{startDate}</span> - <span>{endDate || 'Present'}</span>
+      </div>
+    </div>
+    {company && <div className="text-sm pt-1 text-gray-700 italic">{company}</div>}
+    <div className="text-sm pt-2 text-black leading-relaxed">{description}</div>
+  </div>
+);
+
+const SkillTag = ({ skill }) => (
+  <div className="inline-block px-2 py-1 mt-3 mx-1 bg-black text-sm text-white rounded">
+    {skill.trim()}
+  </div>
+);
 
 class TwoColumn extends Component {
+  static propTypes = {
+    user: PropTypes.shape({
+      name: PropTypes.string.isRequired,
+      wantedJobTitle: PropTypes.string.isRequired,
+      skills: PropTypes.string,
+      summary: PropTypes.string,
+      phone: PropTypes.string,
+      email: PropTypes.string,
+      location: PropTypes.string,
+    }).isRequired,
+    headerColor: PropTypes.string,
+    headerTextColor: PropTypes.string,
+    empCount: PropTypes.number,
+    employment: PropTypes.shape({
+      jobTitles: PropTypes.object,
+      jobStartDate: PropTypes.object,
+      jobEndDate: PropTypes.object,
+      emp: PropTypes.object,
+      jobDesc: PropTypes.object,
+    }),
+    projectCount: PropTypes.number,
+    project: PropTypes.shape({
+      projectTitles: PropTypes.object,
+      projectStartDate: PropTypes.object,
+      projectEndDate: PropTypes.object,
+      projectDesc: PropTypes.object,
+    }),
+    eduCount: PropTypes.number,
+    education: PropTypes.shape({
+      qual: PropTypes.object,
+      eduStartDate: PropTypes.object,
+      eduEndDate: PropTypes.object,
+      edu: PropTypes.object,
+      eduDesc: PropTypes.object,
+    }),
+  };
+
+  static defaultProps = {
+    headerColor: '#1a202c',
+    headerTextColor: '#ffffff',
+    empCount: 0,
+    projectCount: 0,
+    eduCount: 0,
+    employment: { jobTitles: {}, jobStartDate: {}, jobEndDate: {}, emp: {}, jobDesc: {} },
+    project: { projectTitles: {}, projectStartDate: {}, projectEndDate: {}, projectDesc: {} },
+    education: { qual: {}, eduStartDate: {}, eduEndDate: {}, edu: {}, eduDesc: {} },
+  };
+
+  renderSkills = () => {
+    const { skills } = this.props.user;
+    if (!skills) return null;
+    
+    const skillList = skills.split(',').filter(skill => skill.trim());
+    if (skillList.length === 0) return null;
+
+    return (
+      <div className="flex flex-wrap">
+        {skillList.map((skill) => (
+          <SkillTag key={skill.trim()} skill={skill} />
+        ))}
+      </div>
+    );
+  };
+
+  renderContactInfo = () => {
+    const { phone, email, location } = this.props.user;
+    const contactItems = [
+      { icon: Icons.Phone, value: phone, key: 'phone' },
+      { icon: Icons.Email, value: email, key: 'email' },
+      { icon: Icons.Location, value: location, key: 'location' },
+    ];
+
+    return contactItems
+      .filter(item => item.value)
+      .map(item => (
+        <div className="text-sm pt-3 break-all flex items-start" key={item.key}>
+          <span className="mr-2 flex-shrink-0">{item.icon()}</span>
+          <span className="break-words">{item.value}</span>
+        </div>
+      ));
+  };
+
+  renderExperience = () => {
+    const { empCount, employment } = this.props;
+    if (!empCount) return <div className="text-sm pt-3 text-gray-500">No experience listed</div>;
+
+    return Array.from({ length: empCount }, (_, i) => {
+      const index = i + 1;
+      return (
+        <ExperienceItem
+          key={`emp${index}`}
+          title={employment.jobTitles[`jobTitle${index}`]}
+          startDate={employment.jobStartDate[`jobStartDate${index}`]}
+          endDate={employment.jobEndDate[`jobEndDate${index}`]}
+          company={employment.emp[`emp${index}`]}
+          description={employment.jobDesc[`jobDesc${index}`]}
+        />
+      );
+    });
+  };
+
+  renderProjects = () => {
+    const { projectCount, project } = this.props;
+    if (!projectCount) return <div className="text-sm pt-3 text-gray-500">No projects listed</div>;
+
+    return Array.from({ length: projectCount }, (_, i) => {
+      const index = i + 1;
+      return (
+        <ExperienceItem
+          key={`project${index}`}
+          title={project.projectTitles[`projectTitle${index}`]}
+          startDate={project.projectStartDate[`projectStartDate${index}`]}
+          endDate={project.projectEndDate[`projectEndDate${index}`]}
+          description={project.projectDesc[`projectDesc${index}`]}
+        />
+      );
+    });
+  };
+
+  renderEducation = () => {
+    const { eduCount, education } = this.props;
+    if (!eduCount) return <div className="text-sm pt-3 text-gray-500">No education listed</div>;
+
+    return Array.from({ length: eduCount }, (_, i) => {
+      const index = i + 1;
+      return (
+        <ExperienceItem
+          key={`edu${index}`}
+          title={education.qual[`qual${index}`]}
+          startDate={education.eduStartDate[`eduStartDate${index}`]}
+          endDate={education.eduEndDate[`eduEndDate${index}`]}
+          company={education.edu[`educ${index}`]}
+          description={education.eduDesc[`eduDesc${index}`]}
+        />
+      );
+    });
+  };
+
   render() {
+    const { user, headerColor, headerTextColor } = this.props;
+
     return (
       <div
         style={{
-          boxSizing: "border-box",
-          margin: "0 auto",
-          width: "8.5in",
-          height: "11in",
-          backgroundColor: "#fff",
-          boxShadow: "0 3px 8px -3px rgba(0, 0, 0, 0.7)",
+          boxSizing: 'border-box',
+          margin: '0 auto',
+          width: '8.5in',
+          height: '11in',
+          backgroundColor: '#fff',
+          boxShadow: '0 3px 8px -3px rgba(0, 0, 0, 0.7)',
         }}
+        className="print:shadow-none print:w-full print:h-auto"
       >
-        <header style={{color: `${this.props.headerTextColor}`}} className="flex flex-col justify-center items-start font-sans w-full h-1/6">
+        {/* Header */}
+        <header
+          style={{ color: headerTextColor }}
+          className="flex flex-col justify-center items-start font-sans w-full h-1/6"
+        >
           <div className="bg-gray-100 h-1/6 w-1/4"></div>
-          <div style={{backgroundColor: `${this.props.headerColor}`}} className="flex flex-col items-start justify-center px-5 h-5/6 w-full">
-            <div className="text-3xl">{this.props.user.name}</div>
-            <div className="text-lg pt-3">{this.props.user.wantedJobTitle}</div>
+          <div
+            style={{ backgroundColor: headerColor }}
+            className="flex flex-col items-start justify-center px-5 h-5/6 w-full"
+          >
+            <h1 className="text-3xl font-bold">{user.name}</h1>
+            <h2 className="text-lg pt-3">{user.wantedJobTitle}</h2>
           </div>
         </header>
+
+        {/* Main Content */}
         <div className="flex h-5/6 font-sans">
+          {/* Left Column */}
           <div className="bg-gray-100 w-1/4 mt-0.5">
-            <section className="flex flex-col divide-y divide-black w-full mb-5 px-5 pt-3">
-              <div className="text-md text-black tracking-widest">SKILLS</div>
-              <div>
-                {this.props.user.skills == null
-                  ? ""
-                  : this.props.user.skills
-                      .split(",")
-                      .map((skill) => (
-                        <div className="inline-block px-1 mt-3 mx-1 bg-black text-sm text-white" key={skill}>
-                          {skill}
-                        </div>
-                      ))}
-              </div>
-            </section>
-            <div className="flex flex-col px-5">
+            {/* Skills Section */}
+            <Section title="SKILLS" className="divide-y divide-black">
+              {this.renderSkills() || (
+                <div className="text-sm pt-3 text-gray-500">No skills listed</div>
+              )}
+            </Section>
+
+            {/* Contact Section */}
+            <div className="flex flex-col px-5 pb-5">
               <div className="text-md text-black border-b border-black tracking-widest">
                 CONTACT
               </div>
-              <div className="text-sm pt-3 break-all">
-                <svg
-                  className="w-5 inline-block"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={1}
-                    d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"
-                  />
-                </svg>{" "}
-                {this.props.user.phone}
-              </div>
-              <div className="text-sm pt-3 break-all">
-                <svg
-                  className="w-5 inline-block"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={1}
-                    d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
-                  />
-                </svg>{" "}
-                {this.props.user.email}
-              </div>
-              <div className="text-sm pt-3 break-all">
-                <svg
-                  className="w-5 inline-block"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={1}
-                    d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
-                  />
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={1}
-                    d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
-                  />
-                </svg>{" "}
-                {this.props.user.location}
-              </div>
+              {this.renderContactInfo().length > 0 ? (
+                this.renderContactInfo()
+              ) : (
+                <div className="text-sm pt-3 text-gray-500">No contact info</div>
+              )}
             </div>
           </div>
+
+          {/* Right Column */}
           <div className="w-3/4">
-          <section className="flex flex-col text-white w-full mb-5 px-5">
-              <div className="text-md text-black pt-3 border-b border-black tracking-widest">
-                SUMMARY
-              </div>
-              {!this.props.user.summary || 0 === this.props.user.summary.length ? "" : <div className="text-sm pt-3 text-black">
-                {this.props.user.summary}
-              </div>}
-            </section>
-            <section className="flex flex-col text-black w-full mb-5 px-5">
-              <div className="text-md text-black border-b border-black tracking-widest">
-                PROFESSIONAL EXPERIENCE
-              </div>
-              {[...Array(this.props.empCount)].map((e, i) => (
-                <div className="flex flex-col" key={`emp${i}`}>
-                  <div className="flex justify-between">
-                    <div className="text-sm pt-3 text-black">
-                      <li>
-                        {this.props.employment.jobTitles[`jobTitle${i + 1}`]}
-                      </li>
-                    </div>
-                    <div>
-                      <div className="inline-block text-sm pt-3 text-black">
-                        {
-                          this.props.employment.jobStartDate[
-                            `jobStartDate${i + 1}`
-                          ]
-                        }{" "}
-                        -
-                      </div>
-                      <div className="inline-block text-sm pt-3 pl-3 text-black">
-                        {this.props.employment.jobEndDate[
-                          `jobEndDate${i + 1}`
-                        ] === undefined
-                          ? "Present"
-                          : this.props.employment.jobEndDate[
-                              `jobEndDate${i + 1}`
-                            ]}
-                      </div>
-                    </div>
-                  </div>
-                  <div className="text-sm pt-3 text-black">
-                    {this.props.employment.emp[`emp${i + 1}`]}
-                  </div>
-                  <div className="text-sm pt-3 text-black">
-                    {this.props.employment.jobDesc[`jobDesc${i + 1}`]}
-                  </div>
+            {/* Summary Section */}
+            {user.summary && (
+              <Section title="SUMMARY">
+                <div className="text-sm pt-3 text-black leading-relaxed">
+                  {user.summary}
                 </div>
-              ))}
-            </section>
-            <section className="flex flex-col text-black w-full mb-5 px-5">
-              <div className="text-md text-black border-b border-black tracking-widest">
-                PROJECTS
-              </div>
-              {[...Array(this.props.projectCount)].map((e, i) => (
-                <div className="flex flex-col" key={`emp${i}`}>
-                  <div className="flex justify-between">
-                    <div className="text-sm pt-3 text-black">
-                      <li>
-                        {
-                          this.props.project.projectTitles[
-                            `projectTitle${i + 1}`
-                          ]
-                        }
-                      </li>
-                    </div>
-                    <div>
-                      <div className="inline-block text-sm pt-3 text-black">
-                        {
-                          this.props.project.projectStartDate[
-                            `projectStartDate${i + 1}`
-                          ]
-                        }{" "}
-                        -
-                      </div>
-                      <div className="inline-block text-sm pt-3 pl-3 text-black">
-                        {this.props.project.projectEndDate[
-                          `projectEndDate${i + 1}`
-                        ] === undefined
-                          ? "Present"
-                          : this.props.project.projectEndDate[
-                              `projectEndDate${i + 1}`
-                            ]}
-                      </div>
-                    </div>
-                  </div>
-                  <div className="text-sm pt-3 text-black">
-                    {this.props.project.projectDesc[`projectDesc${i + 1}`]}
-                  </div>
-                </div>
-              ))}
-            </section>
-            <section className="flex flex-col text-black w-full mb-5 px-5">
-              <div className="text-md text-black border-b border-black tracking-widest">
-                EDUCATION
-              </div>
-              {[...Array(this.props.eduCount)].map((e, i) => (
-                <div className="flex flex-col" key={`emp${i}`}>
-                  <div className="flex justify-between">
-                    <div className="text-sm pt-3 text-black">
-                      <li>{this.props.education.qual[`qual${i + 1}`]}</li>
-                    </div>
-                    <div>
-                      <div className="inline-block text-sm pt-3 text-black">
-                        {
-                          this.props.education.eduStartDate[
-                            `eduStartDate${i + 1}`
-                          ]
-                        }{" "}
-                        -
-                      </div>
-                      <div className="inline-block text-sm pt-3 pl-3 text-black">
-                        {this.props.education.eduEndDate[
-                          `eduEndDate${i + 1}`
-                        ] === undefined
-                          ? "Present"
-                          : this.props.education.eduEndDate[
-                              `eduEndDate${i + 1}`
-                            ]}
-                      </div>
-                    </div>
-                  </div>
-                  <div className="text-sm pt-3 text-black">
-                    {this.props.education.edu[`educ${i + 1}`]}
-                  </div>
-                  <div className="text-sm pt-3 text-black">
-                    {this.props.education.eduDesc[`eduDesc${i + 1}`]}
-                  </div>
-                </div>
-              ))}
-            </section>
+              </Section>
+            )}
+
+            {/* Professional Experience Section */}
+            <Section title="PROFESSIONAL EXPERIENCE">
+              {this.renderExperience()}
+            </Section>
+
+            {/* Projects Section */}
+            <Section title="PROJECTS">
+              {this.renderProjects()}
+            </Section>
+
+            {/* Education Section */}
+            <Section title="EDUCATION">
+              {this.renderEducation()}
+            </Section>
           </div>
         </div>
       </div>
